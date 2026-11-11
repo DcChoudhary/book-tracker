@@ -18,14 +18,12 @@ export default function App() {
 
   async function loadBooks() {
     try {
-
       const response = await fetch(API_URL)
-
       if(!response.ok) {
         throw new Error(`Request failed: ${response.status}`)
       }
 
-      const data = await response.json
+      const data = await response.json()
       setBooks(data)
     } catch(error) {
       setError(error.message)
@@ -34,18 +32,104 @@ export default function App() {
     }
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit(event) {
 
-    const newBook = {
-      id: Date.now(),
-      title: title,
-      author: author
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          book: {
+            title,
+            author,
+            status: "want-to-read",
+            rating: null
+          }
+        })
+      })
+      if (!response.ok) {
+        throw new Error(`Create failed: ${response.status}`);
+      }
+
+      const refreshResponse = await fetch(API_URL)
+      if (!refreshResponse.ok) {
+        throw new Error(`Reload failed: ${refreshResponse.status}`)
+      }
+
+      const refreshBooks = await refreshResponse.json()
+      setBooks(refreshBooks)
+      
+      setTitle("")
+      setAuthor("")
+    } catch(err) {
+      setError(err.message)
+    }
+  }
+
+  async function reloadBooks() {
+    try {
+    const response = await fetch(API_URL)
+
+    if(!response.ok) {
+      throw new Error(`Reload failed: ${response.status}`)
     }
 
-    setBooks([...books, newBook])
-    setTitle("")
-    setAuthor("")
+    const books = await response.json()
+
+    setBooks(books)
+
+    } catch(err) {
+      setError(err.message)
+    }
+  }
+
+  async function handleDelete(book) {
+    try {
+      const url = `${API_URL}/${book.id}`
+      const response = await fetch(url, {
+        method: "DELETE"
+      })
+
+      if (!response.ok) {
+        throw new Error(`Delete failed: ${response.status}`)
+      }
+
+      await reloadBooks()
+
+    } catch(err) {
+      setError(err.message)
+    }
+  }
+
+  async function handleEdit(book) {
+    const newTitle = window.prompt("Edit book title:", book.title);
+
+    if(newTitle == null || newTitle.trim() === "") {
+      return;
+    }
+
+    try {
+      const url = `${API_URL}/${book.id}`
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          book: {
+            title: newTitle
+          }
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`Update failed: ${response.status}`)
+      }
+
+      await reloadBooks()
+
+    } catch(err) {
+      setError(err.message)
+    }
+
   }
   return (
     <main>
@@ -81,6 +165,13 @@ export default function App() {
             <strong>{book.title}</strong> by {book.author}
             <span> - {book.status}</span>
             {book.rating && <span> (Rating: {book.rating}) </span>}
+
+            <button type="button" onClick={() => handleEdit(book)}>
+              Edit title
+            </button>
+            <button type="button" onClick={() => handleDelete(book)}>
+              Delete
+            </button>
           </li>
         ))}
       </ul>
