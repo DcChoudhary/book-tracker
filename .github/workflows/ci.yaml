@@ -1,0 +1,85 @@
+# Event
+# jobs
+# runner
+# steps
+# Action
+
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  rails-rspec:
+    name: Rails Rspec
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: ${{secrets.DATABASE_USER}}
+          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}
+        ports:
+        - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ${{secrets.DATABASE_USER}} -d ${{secrets.DATABASE_NAME}}"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: ${{DATABASE_URL}}          
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up Ruby on Rails and install gem
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          working-directory: api
+          bundler-cache: true
+      
+      - name: Prepare the test database
+        working-directory: api
+        run: bin/rails db:prepare
+      
+      - name: Run RSpec
+        working-directory: api
+        run: bundle exec rspec
+  
+  frontend:
+    name: Frontend lint and build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with: 
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install frontend dependency
+        working-directory: frontend
+        run: npm run lint
+      
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+
+
