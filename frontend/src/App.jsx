@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
-import { 
+import {
   Alert,
-  Box, 
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
-  Chip, 
-  Container, 
+  Chip,
+  Container,
   LinearProgress,
-  Paper, 
-  Stack, 
-  TextField, 
+  Paper,
+  Stack,
+  TextField,
   Typography,
 
 } from "@mui/material"
@@ -34,13 +34,13 @@ export default function App() {
   async function loadBooks() {
     try {
       const response = await fetch(API_URL)
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error(`Request failed: ${response.status}`)
       }
 
       const data = await response.json()
       setBooks(data)
-    } catch(error) {
+    } catch (error) {
       setError(error.message)
     } finally {
       setLoading(false)
@@ -53,7 +53,7 @@ export default function App() {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           book: {
             title,
             author,
@@ -73,27 +73,27 @@ export default function App() {
 
       const refreshBooks = await refreshResponse.json()
       setBooks(refreshBooks)
-      
+
       setTitle("")
       setAuthor("")
-    } catch(err) {
+    } catch (err) {
       setError(err.message)
     }
   }
 
   async function reloadBooks() {
     try {
-    const response = await fetch(API_URL)
+      const response = await fetch(API_URL)
 
-    if(!response.ok) {
-      throw new Error(`Reload failed: ${response.status}`)
-    }
+      if (!response.ok) {
+        throw new Error(`Reload failed: ${response.status}`)
+      }
 
-    const books = await response.json()
+      const books = await response.json()
 
-    setBooks(books)
+      setBooks(books)
 
-    } catch(err) {
+    } catch (err) {
       setError(err.message)
     }
   }
@@ -111,7 +111,7 @@ export default function App() {
 
       await reloadBooks()
 
-    } catch(err) {
+    } catch (err) {
       setError(err.message)
     }
   }
@@ -119,7 +119,7 @@ export default function App() {
   async function handleEdit(book) {
     const newTitle = window.prompt("Edit book title:", book.title);
 
-    if(newTitle == null || newTitle.trim() === "") {
+    if (newTitle == null || newTitle.trim() === "") {
       return;
     }
 
@@ -141,7 +141,7 @@ export default function App() {
 
       await reloadBooks()
 
-    } catch(err) {
+    } catch (err) {
       setError(err.message)
     }
 
@@ -150,7 +150,7 @@ export default function App() {
     <Container
       component="main"
       maxWidth="md"
-      sx={{py: {xs: 4, sm: 6, md: 8} }}
+      sx={{ py: { xs: 4, sm: 6, md: 8 } }}
     >
       <Stack space={4}>
         <Box component="header">
@@ -161,28 +161,28 @@ export default function App() {
           >
             My personal library
           </Typography>
-        
+
           <Typography
-          variant='h1'
-          sx={{
-            mt: 1,
-            fontFamily: "Georgia, serif",
-            fontSize: { xs: "2.75rem", sm: "3.5rem" },
-            fontWeight: 600,
-            letterSpacing: "-0.04em",
-          }}
+            variant='h1'
+            sx={{
+              mt: 1,
+              fontFamily: "Georgia, serif",
+              fontSize: { xs: "2.75rem", sm: "3.5rem" },
+              fontWeight: 600,
+              letterSpacing: "-0.04em",
+            }}
           >
             My Book tracker
           </Typography>
-          
+
           <Typography
-          color='text.secondary'
-          sx={{ mt: 1.5, maxWidth: 520, lineHeight: 1.7 }}
+            color='text.secondary'
+            sx={{ mt: 1.5, maxWidth: 520, lineHeight: 1.7 }}
           >
             Keep track of the books you're reading and the ones you want to remember.
           </Typography>
         </Box>
-      
+
         <Paper
           component="section"
           elevation={0}
@@ -193,8 +193,8 @@ export default function App() {
             borderRadius: "18px",
             bgcolor: "background.paper"
           }}
-          >
-          <Typography variant='h2' sx={{ mb:2, fontSize: "1.25rem", fontWeight: 700 }}>
+        >
+          <Typography variant='h2' sx={{ mb: 2, fontSize: "1.25rem", fontWeight: 700 }}>
             Add a book
           </Typography>
 
@@ -207,8 +207,8 @@ export default function App() {
               gap: 2,
               alignItems: "start",
             }}
-            >
-          
+          >
+
             <TextField
               label="Title"
               value={title}
@@ -223,146 +223,146 @@ export default function App() {
               required
               fullWidth
             />
-          
+
             <Button type="submit" variant='contained' size="large" sx={{ minHeight: 56 }}>
               Add Book
             </Button>
           </Box>
         </Paper>
 
-      {loading && <p>Loading Books...</p>}
-      {error && <p role="alert">Could not load books: {error}</p>}
-      <Stack component="section" spacing={2}>
-  <Stack
-    direction={{ xs: "column", sm: "row" }}
-    justifyContent="space-between"
-    alignItems={{ xs: "flex-start", sm: "center" }}
-    spacing={1}
-  >
-    <Box>
-      <Typography
-        variant="overline"
-        color="secondary"
-        sx={{ fontWeight: 700, letterSpacing: "0.14em" }}
-      >
-        Your collection
-      </Typography>
-      <Typography variant="h2" sx={{ fontSize: "1.5rem", fontWeight: 700 }}>
-        Your books
-      </Typography>
-    </Box>
+        {loading && <p>Loading Books...</p>}
+        {error && <p role="alert">Could not load books: {error}</p>}
+        <Stack component="section" spacing={2}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-start", sm: "center" }}
+            spacing={1}
+          >
+            <Box>
+              <Typography
+                variant="overline"
+                color="secondary"
+                sx={{ fontWeight: 700, letterSpacing: "0.14em" }}
+              >
+                Your collection
+              </Typography>
+              <Typography variant="h2" sx={{ fontSize: "1.5rem", fontWeight: 700 }}>
+                Your books
+              </Typography>
+            </Box>
 
-    <Chip
-      color="primary"
-      variant="outlined"
-      label={`${books.length} ${books.length === 1 ? "book" : "books"}`}
-    />
-  </Stack>
+            <Chip
+              color="primary"
+              variant="outlined"
+              label={`${books.length} ${books.length === 1 ? "book" : "books"}`}
+            />
+          </Stack>
 
-  {loading && <LinearProgress aria-label="Loading books" />}
+          {loading && <LinearProgress aria-label="Loading books" />}
 
-  {error && <Alert severity="error">{error}</Alert>}
+          {error && <Alert severity="error">{error}</Alert>}
 
-  {!loading && books.length === 0 ? (
-    <Paper
-      variant="outlined"
-      sx={{
-        p: 4,
-        borderRadius: "16px",
-        borderStyle: "dashed",
-        textAlign: "center",
-      }}
-    >
-      <Typography variant="h6">Your library is waiting</Typography>
-      <Typography color="text.secondary" sx={{ mt: 0.5 }}>
-        Add your first book using the form above.
-      </Typography>
-    </Paper>
-  ) : (
-    <Box
-      sx={{
-        display: "grid",
-        gridTemplateColumns: {
-          xs: "1fr",
-          sm: "repeat(2, minmax(0, 1fr))",
-          md: "repeat(3, minmax(0, 1fr))",
-        },
-        gap: 2,
-      }}
-    >
-      {books.map((book) => (
-        <Card
-          key={book.id}
-          component="article"
-          variant="outlined"
-          sx={{
-            display: "flex",
-            minHeight: 210,
-            flexDirection: "column",
-            justifyContent: "space-between",
-            borderRadius: "16px",
-            bgcolor: "background.paper",
-            transition: "transform 160ms ease, box-shadow 160ms ease",
-            "&:hover": {
-              transform: "translateY(-3px)",
-              boxShadow: 3,
-            },
-          }}
-        >
-          <CardContent>
-            <Typography
-              component="h3"
-              variant="h6"
-              sx={{ fontFamily: "Georgia, serif", fontWeight: 700 }}
+          {!loading && books.length === 0 ? (
+            <Paper
+              variant="outlined"
+              sx={{
+                p: 4,
+                borderRadius: "16px",
+                borderStyle: "dashed",
+                textAlign: "center",
+              }}
             >
-              {book.title}
-            </Typography>
-
-            <Typography color="text.secondary" sx={{ mt: 0.5 }}>
-              by {book.author}
-            </Typography>
-
-            <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
-              <Chip
-                size="small"
-                color="primary"
-                variant="outlined"
-                label={book.status?.replace(/[-_]/g, " ") || "No status"}
-              />
-
-              {book.rating != null && book.rating !== "" && (
-                <Chip
-                  size="small"
-                  color="secondary"
-                  label={`★ ${book.rating}`}
-                />
-              )}
-            </Stack>
-          </CardContent>
-
-          <CardActions sx={{ px: 2, pb: 2, pt: 0 }}>
-            <Button
-              size="small"
-              onClick={() => handleEdit(book)}
-              aria-label={`Edit title for ${book.title}`}
+              <Typography variant="h6">Your library is waiting</Typography>
+              <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+                Add your first book using the form above.
+              </Typography>
+            </Paper>
+          ) : (
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "repeat(2, minmax(0, 1fr))",
+                  md: "repeat(3, minmax(0, 1fr))",
+                },
+                gap: 2,
+              }}
             >
-              Edit
-            </Button>
+              {books.map((book) => (
+                <Card
+                  key={book.id}
+                  component="article"
+                  variant="outlined"
+                  sx={{
+                    display: "flex",
+                    minHeight: 210,
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    borderRadius: "16px",
+                    bgcolor: "background.paper",
+                    transition: "transform 160ms ease, box-shadow 160ms ease",
+                    "&:hover": {
+                      transform: "translateY(-3px)",
+                      boxShadow: 3,
+                    },
+                  }}
+                >
+                  <CardContent>
+                    <Typography
+                      component="h3"
+                      variant="h6"
+                      sx={{ fontFamily: "Georgia, serif", fontWeight: 700 }}
+                    >
+                      {book.title}
+                    </Typography>
 
-            <Button
-              size="small"
-              color="error"
-              onClick={() => handleDelete(book)}
-              aria-label={`Delete ${book.title}`}
-            >
-              Delete
-            </Button>
-          </CardActions>
-        </Card>
-      ))}
-    </Box>
-  )}
-</Stack>
+                    <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+                      by {book.author}
+                    </Typography>
+
+                    <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
+                      <Chip
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        label={book.status?.replace(/[-_]/g, " ") || "No status"}
+                      />
+
+                      {book.rating != null && book.rating !== "" && (
+                        <Chip
+                          size="small"
+                          color="secondary"
+                          label={`★ ${book.rating}`}
+                        />
+                      )}
+                    </Stack>
+                  </CardContent>
+
+                  <CardActions sx={{ px: 2, pb: 2, pt: 0 }}>
+                    <Button
+                      size="small"
+                      onClick={() => handleEdit(book)}
+                      aria-label={`Edit title for ${book.title}`}
+                    >
+                      Edit
+                    </Button>
+
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() => handleDelete(book)}
+                      aria-label={`Delete ${book.title}`}
+                    >
+                      Delete
+                    </Button>
+                  </CardActions>
+                </Card>
+              ))}
+            </Box>
+          )}
+        </Stack>
       </Stack>
     </Container>
   );
