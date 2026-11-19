@@ -1,180 +1,102 @@
 import { useEffect, useState } from 'react'
-import './App.css'
+import { Container, Stack } from "@mui/material"
+
+import AppHeader from './components/AppHeader'
+import BookForm from './features/books/BookForm';
+import BookList from './features/books/BookList';
+
+import { booksApi } from './features/books/BooksApi';
 
 const API_URL = "http://localhost:3000/api/v1/books";
 
 export default function App() {
   const [books, setBooks] = useState([])
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
+    async function loadBooks() {
+      setLoading(true)
+      try {
+        const books = await booksApi.list()
+        setBooks(books)
+      } catch (error) {
+        setError(error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
     loadBooks();
   }, [])
 
-  async function loadBooks() {
+  async function handleCreate(book) {
     try {
-      const response = await fetch(API_URL)
-      if(!response.ok) {
-        throw new Error(`Request failed: ${response.status}`)
-      }
-
-      const data = await response.json()
-      setBooks(data)
-    } catch(error) {
-      setError(error.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleSubmit(event) {
-
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          book: {
-            title,
-            author,
-            status: "want-to-read",
-            rating: null
-          }
-        })
-      })
-      if (!response.ok) {
-        throw new Error(`Create failed: ${response.status}`);
-      }
-
-      const refreshResponse = await fetch(API_URL)
-      if (!refreshResponse.ok) {
-        throw new Error(`Reload failed: ${refreshResponse.status}`)
-      }
-
-      const refreshBooks = await refreshResponse.json()
-      setBooks(refreshBooks)
-      
-      setTitle("")
-      setAuthor("")
-    } catch(err) {
-      setError(err.message)
-    }
-  }
-
-  async function reloadBooks() {
-    try {
-    const response = await fetch(API_URL)
-
-    if(!response.ok) {
-      throw new Error(`Reload failed: ${response.status}`)
-    }
-
-    const books = await response.json()
-
-    setBooks(books)
-
-    } catch(err) {
-      setError(err.message)
+      await booksApi.create(book)
+      const refreshedBooks = await booksApi.list()
+      setBooks(refreshedBooks)
+    } catch (error) {
+      setError(error.message);
+      throw error;
     }
   }
 
   async function handleDelete(book) {
     try {
-      const url = `${API_URL}/${book.id}`
-      const response = await fetch(url, {
-        method: "DELETE"
-      })
-
-      if (!response.ok) {
-        throw new Error(`Delete failed: ${response.status}`)
-      }
-
-      await reloadBooks()
-
-    } catch(err) {
-      setError(err.message)
+      await booksApi.delete(book.id)
+      setBooks((currentBooks) =>
+        currentBooks.filter((currentBook) => currentBook.id !== book.id)
+      );
+    } catch (error) {
+      setError(error.message)
+      throw error;
     }
   }
 
   async function handleEdit(book) {
     const newTitle = window.prompt("Edit book title:", book.title);
 
-    if(newTitle == null || newTitle.trim() === "") {
+    if (newTitle == null || newTitle.trim() === "") {
       return;
     }
 
     try {
-      const url = `${API_URL}/${book.id}`
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          book: {
-            title: newTitle
-          }
-        })
-      })
+      const updatedBook = await booksApi.update(book.id, {
+        title: newTitle.trim(),
+      });
 
-      if (!response.ok) {
-        throw new Error(`Update failed: ${response.status}`)
-      }
-
-      await reloadBooks()
-
-    } catch(err) {
+      setBooks((currentBooks) =>
+        currentBooks.map((currentBook) =>
+          currentBook.id === updatedBook.id ? updatedBook : currentBook)
+      )
+    } catch (err) {
       setError(err.message)
+      throw error
     }
-
   }
+
   return (
-    <main>
-      <h1>My Book Tracker</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            required
-          />
-        </label>
+    <Container
+      component="main"
+      maxWidth="md"
+      sx={{ py: { xs: 4, sm: 6, md: 8 } }}
+    >
+      <Stack spacing={4}>
 
-        <label>
-          Author
+        <AppHeader />
+        <BookForm onCreate={handleCreate} />
 
-          <input
-            value={author}
-            onChange={(event) => { setAuthor(event.target.value) }}
-            required
-          />
-        </label>
+        {loading && <p>Loading Books...</p>}
+        {error && <p role="alert">Could not load books: {error}</p>}
 
-        <button type="submit">Save</button>
-      </form>
-
-      {loading && <p>Loading Books...</p>}
-      {error && <p role="alert">Could not load books: {error}</p>}
-      <ul>
-        {books.map((book) => (
-          <li key={book.id}>
-            <strong>{book.title}</strong> by {book.author}
-            <span> - {book.status}</span>
-            {book.rating && <span> (Rating: {book.rating}) </span>}
-
-            <button type="button" onClick={() => handleEdit(book)}>
-              Edit title
-            </button>
-            <button type="button" onClick={() => handleDelete(book)}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
-    </main>
+        <BookList
+          books={books}
+          loading={loading}
+          error={error}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </Stack>
+    </Container>
   );
 }
