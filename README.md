@@ -118,9 +118,15 @@ The API also accepts partial book attributes in an update request, for example:
 - [x] Build the Rails books CRUD API and React CRUD interface.
 - [x] Run Rails, React, and PostgreSQL together with Docker Compose for development.
 - [x] Document the current setup and API.
-- [ ] Add automated checks and CI.
-- [ ] Improve the interface and add book search/filtering.
+- [x] Add automated checks and CI.
+- [x] Improve the UI interface. 
 - [ ] Add JWT authentication and per-user book authorization.
+- [ ] Add book search/filtering.
+- [ ] Standardize API error responses using industry-standard formats so any client can reliably consume them.
 - [ ] Add file uploads and configure durable object storage for deployment.
 - [ ] Prepare and deploy a production configuration.
+- [ ] Enforce strict PR merge requirements in CI/CD:
+	- [ ] Minimum test coverage threshold met
+	- [ ] Zero linting errors
+	- [ ] At least one peer review approval
 - [ ] Extend CI/CD to deploy changes and create temporary preview environments for pull requests; remove previews when a pull request is merged or closed.
