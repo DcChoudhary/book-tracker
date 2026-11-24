@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :books
+      resources :users, only: [] do
+        collection do
+          post :register
+          post :login
+        end
+      end
     end
   end
 end
