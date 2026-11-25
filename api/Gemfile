@@ -49,5 +49,4 @@ group :development, :test do
   gem "rspec-rails", "~> 8.0.0"
 
   gem 'dotenv', '3.2.0'
-  gem 'annotate', '2.6.5'
 end
