@@ -6,12 +6,13 @@ module Api
       before_action :find_book, only: %i[show destroy update]
 
       def index
-        books = Book.all
+        # Add pagination
+        books = current_user.books
         render json: books, status: :ok
       end
 
       def create
-        @book = Book.new(book_params)
+        @book = current_user.book.new(book_params)
       
         if @book.save
           render json: {}, location: api_v1_book_url(@book), status: :created
@@ -44,7 +45,7 @@ module Api
       end
 
       def find_book
-        @book ||= Book.find(params[:id])
+        @book ||= current_user.book.find(params[:id])
       end
     end
   end
