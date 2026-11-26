@@ -11,6 +11,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :books
+      resources :sessions, only: [:create] do
+        collection do
+          post :login
+        end
+      end
     end
   end
 end

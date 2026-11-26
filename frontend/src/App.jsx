@@ -4,10 +4,7 @@ import { Container, Stack } from "@mui/material"
 import AppHeader from './components/AppHeader'
 import BookForm from './features/books/BookForm';
 import BookList from './features/books/BookList';
-
 import { booksApi } from './features/books/BooksApi';
-
-const API_URL = "http://localhost:3000/api/v1/books";
 
 export default function App() {
   const [books, setBooks] = useState([])
