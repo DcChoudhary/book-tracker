@@ -121,8 +121,9 @@ The API also accepts partial book attributes in an update request, for example:
 - [x] Add automated checks and CI.
 - [x] Improve the UI interface. 
 - [ ] Add JWT authentication and per-user book authorization.
-- [ ] Add book search/filtering.
 - [ ] Standardize API error responses using industry-standard formats so any client can reliably consume them.
+- [ ] Add json serializer
+- [ ] Add book search/filtering.
 - [ ] Add file uploads and configure durable object storage for deployment.
 - [ ] Prepare and deploy a production configuration.
 - [ ] Enforce strict PR merge requirements in CI/CD:

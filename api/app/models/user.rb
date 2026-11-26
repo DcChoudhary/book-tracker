@@ -6,7 +6,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :password, presence: true, length: { minimum: 8, maximum: 16 }
 
-  normalizes :email, with: ->(email) { email.stripe.lowercase }
+  normalizes :email, with: ->(email) { email.strip.downcase }
 
   has_many :books, dependent: :destroy
 end

@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  include authenticate
+  include Authenticate
 
   class AuthenticationError < StandardError; end
 end

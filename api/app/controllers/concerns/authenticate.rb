@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Authenticate
+  extend ActiveSupport::Concern
+
   included do
     before_action :authenticate
   end
@@ -8,7 +10,7 @@ module Authenticate
   def authenticate
     begin
       @current_user = User.find(decode_token[:sub][:id])
-    rescue AuthenticationError => e
+    rescue ApplicationController::AuthenticationError => e
       render json: { error: e.message }, status: :unauthorized
     end
   end
@@ -18,7 +20,7 @@ module Authenticate
   attr_reader :current_user
 
   def decode_token
-    token = request.authorization.gsub("/A\bBearer \b/z", "")
+    token = request.authorization.gsub(/\A\bBearer \b/, "")
     Authentication::JsonWebToken.decode(token)
   end
 end

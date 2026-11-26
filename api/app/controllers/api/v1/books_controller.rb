@@ -12,7 +12,7 @@ module Api
       end
 
       def create
-        @book = current_user.book.new(book_params)
+        @book = current_user.books.new(book_params)
       
         if @book.save
           render json: {}, location: api_v1_book_url(@book), status: :created
@@ -45,7 +45,7 @@ module Api
       end
 
       def find_book
-        @book ||= current_user.book.find(params[:id])
+        @book ||= current_user.books.find(params[:id])
       end
     end
   end

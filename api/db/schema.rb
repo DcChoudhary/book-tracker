@@ -15,10 +15,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_25_144012) do
   enable_extension "pg_catalog.plpgsql"
 
   create_table "books", force: :cascade do |t|
-    t.string "title"
-    t.string "author"
-    t.string "status"
-    t.decimal "rating"
+    t.string "title", null: false
+    t.string "author", null: false
+    t.string "status", null: false
+    t.decimal "rating", default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
