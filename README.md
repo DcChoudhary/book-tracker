@@ -125,6 +125,7 @@ The API also accepts partial book attributes in an update request, for example:
 - [ ] Add json serializer
 - [ ] Add book search/filtering.
 - [ ] Add file uploads and configure durable object storage for deployment.
+- [ ] Add Api documentation and api contract test.
 - [ ] Prepare and deploy a production configuration.
 - [ ] Enforce strict PR merge requirements in CI/CD:
 	- [ ] Minimum test coverage threshold met
