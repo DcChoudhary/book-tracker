@@ -10,7 +10,7 @@ module Api
       
       def create
         if user = User.authenticate_by(email: params[:email], password: params[:password])
-          render json: { token: jwt_token_for(user) }, status: :ok
+          render json: { token: Authentication::JsonWebToken.encode(user) }, status: :ok
         else
           render json: { message: "Invalid email or password" }, status: :unprocessable_entity
         end

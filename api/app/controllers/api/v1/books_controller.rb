@@ -6,7 +6,7 @@ module Api
       before_action :find_book, only: %i[show destroy update]
 
       def index
-        # Add pagination
+        #TODO: Add pagination
         books = current_user.books
         render json: books, status: :ok
       end

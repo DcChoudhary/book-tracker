@@ -19,7 +19,7 @@ module Authentication
           token, = JWT.decode(token, secret, true,
                               { algorithm: ALGORITHM,
                                 verify_expiration: true,
-                                required_claims: %i[exp sub] 
+                                required_claims: %w[exp sub] 
                               })
           token.with_indifferent_access
         rescue JWT::DecodeError => e
