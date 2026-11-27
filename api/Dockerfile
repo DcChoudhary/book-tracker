@@ -1,4 +1,4 @@
-FROM ruby:3.3.1-slim
+FROM ruby:4.0.1-slim
 
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential libpq-dev && \

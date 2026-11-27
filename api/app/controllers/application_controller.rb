@@ -1,5 +1,11 @@
 class ApplicationController < ActionController::API
-  include Authenticate
+  rescue_from Authentication::JsonWebToken::AuthenticationError, with: :render_authentication_error
 
-  class AuthenticationError < StandardError; end
+  include Authenticatable
+
+  private
+
+  def render_authentication_error
+    render json: { error: 'Authentication is required to access this resource.' }, status: :unauthorized
+  end
 end

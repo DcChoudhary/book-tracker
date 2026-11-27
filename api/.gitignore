@@ -10,6 +10,9 @@
 # Ignore all environment files.
 /.env*
 
+# Allow .env.example to version control
+!/.env.example
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -27,7 +30,3 @@
 /tmp/storage/*
 !/tmp/storage/
 !/tmp/storage/.keep
-
-# Ignore key files for decrypting credentials and more.
-/config/*.key
-

@@ -16,10 +16,14 @@ module Authentication
 
       def decode(token)
         begin
-          token = JWT.decode(token, secret, true, { algorithm: ALGORITHM })
-          token[0].with_indifferent_access
+          token, = JWT.decode(token, secret, true,
+                              { algorithm: ALGORITHM,
+                                verify_expiration: true,
+                                required_claims: %i[exp sub] 
+                              })
+          token.with_indifferent_access
         rescue JWT::DecodeError => e
-          raise ApplicationController::AuthenticationError, e.message
+          raise AuthenticationError, e.message
         end
       end
 
