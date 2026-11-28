@@ -1,7 +1,7 @@
 const API_URL =
   import.meta.env.VITE_API_URL ?? "http://localhost:3000/api/v1/books";
 
-import type { BookParams } from '../../types/book'
+import type { BookParams, UpdateBookParams } from '../../types/book'
 
 async function request(url:string, option = {}) {
   const response = await fetch(url, option)
@@ -18,7 +18,7 @@ async function request(url:string, option = {}) {
   return await response.json();
 }
 
-function jsonOption(method: string, book: BookParams | {}) {
+function jsonOption(method: string, book: BookParams | UpdateBookParams) {
   return {
     method,
     headers: { "Content-Type": "application/json" },

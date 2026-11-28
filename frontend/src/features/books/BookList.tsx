@@ -7,7 +7,7 @@ import type { Book, DeleteBookFn, EditBookFn } from "../../types/book"
 interface BookListProps {
   books: Book[],
   loading: boolean,
-  error: any, // We are using any here because e don't have define fix RFC response from the API, chang it once we have the RFC problem+json response from the API's
+  error: string, // We are using any here because e don't have define fix RFC response from the API, chang it once we have the RFC problem+json response from the API's
   onEdit: EditBookFn,
   onDelete:  DeleteBookFn,
 }
@@ -45,8 +45,8 @@ export default function BookList({ books, loading, error, onEdit, onDelete }: Bo
 
       {loading && <LinearProgress aria-label="Loading books" />}
 
-      {error && <Alert severity="error">{error}</Alert>}
-
+      { error && <Alert severity="error">{error}</Alert> }
+      
       {
         !loading && books.length === 0 ? (
           <Paper

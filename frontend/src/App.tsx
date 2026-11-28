@@ -19,8 +19,10 @@ export default function App() {
       try {
         const books = await booksApi.list()
         setBooks(books)
-      } catch (error: any) {
-        setError(error.message)
+      } catch (error: unknown) {
+        if(error instanceof(Error)) {
+          setError(error.message)
+        }
       } finally {
         setLoading(false)
       }
@@ -34,8 +36,10 @@ export default function App() {
       await booksApi.create(book)
       const refreshedBooks = await booksApi.list()
       setBooks(refreshedBooks)
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if(error instanceof(Error)) {
+        setError(error.message);
+      }
       throw error;
     }
   }
@@ -46,8 +50,10 @@ export default function App() {
       setBooks((currentBooks) =>
         currentBooks.filter((currentBook) => currentBook.id !== book.id)
       );
-    } catch (error: any) {
-      setError(error.message)
+    } catch (error: unknown) {
+      if(error instanceof(Error)) {
+        setError(error.message)
+      }
       throw error;
     }
   }
@@ -68,8 +74,10 @@ export default function App() {
         currentBooks.map((currentBook) =>
           currentBook.id === updatedBook.id ? updatedBook : currentBook)
       )
-    } catch (error: any) {
-      setError(error.message)
+    } catch (error: unknown) {
+      if(error instanceof(Error)) {
+        setError(error.message)
+      }
       throw error
     }
   }
