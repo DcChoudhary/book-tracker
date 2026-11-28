@@ -7,8 +7,17 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
+ 
+import type { Book } from '../../types/book'
 
-export default function BookCard({ book, onEdit, onDelete }) {
+
+interface BookCardProps {
+  book: Book,
+  onEdit: (book: Book) => void | Promise<void>,
+  onDelete: (bok: Book) => void | Promise<void>,
+}
+
+export default function BookCard({ book, onEdit, onDelete }: BookCardProps) {
   return (
     <Card
       component="article"
@@ -40,7 +49,7 @@ export default function BookCard({ book, onEdit, onDelete }) {
           by {book.author}
         </Typography>
 
-        <Stack direction="row" gap={1} sx={{ flexWrap: "wrap", mt: 2 }}>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", mt: 2 }}>
           <Chip
             size="small"
             color="primary"
@@ -48,13 +57,12 @@ export default function BookCard({ book, onEdit, onDelete }) {
             label={book.status?.replace(/[-_]/g, " ") || "No status"}
           />
 
-          {book.rating != null && book.rating !== "" && (
-            <Chip
-              size="small"
-              color="secondary"
-              label={`★ ${book.rating}`}
-            />
-          )}
+          <Chip
+            size="small"
+            color="secondary"
+            label={`★ ${book.rating}`}
+          />
+          
         </Stack>
       </CardContent>
 

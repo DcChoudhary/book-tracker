@@ -6,8 +6,10 @@ import BookForm from './features/books/BookForm';
 import BookList from './features/books/BookList';
 import { booksApi } from './features/books/BooksApi';
 
+import type { Book, BookParams, DeleteBookFn, EditBookFn, CreateBookFn } from './types/book'
+
 export default function App() {
-  const [books, setBooks] = useState([])
+  const [books, setBooks] = useState<Book[]>([])
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -17,7 +19,7 @@ export default function App() {
       try {
         const books = await booksApi.list()
         setBooks(books)
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message)
       } finally {
         setLoading(false)
@@ -27,30 +29,30 @@ export default function App() {
     loadBooks();
   }, [])
 
-  async function handleCreate(book) {
+  const handleCreate: CreateBookFn = async(book: BookParams) => {
     try {
       await booksApi.create(book)
       const refreshedBooks = await booksApi.list()
       setBooks(refreshedBooks)
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
       throw error;
     }
   }
 
-  async function handleDelete(book) {
+  const handleDelete: DeleteBookFn = async (book: Book) => {
     try {
       await booksApi.delete(book.id)
       setBooks((currentBooks) =>
         currentBooks.filter((currentBook) => currentBook.id !== book.id)
       );
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message)
       throw error;
     }
   }
 
-  async function handleEdit(book) {
+  const handleEdit: EditBookFn = async (book: Book) => {
     const newTitle = window.prompt("Edit book title:", book.title);
 
     if (newTitle == null || newTitle.trim() === "") {
@@ -66,8 +68,8 @@ export default function App() {
         currentBooks.map((currentBook) =>
           currentBook.id === updatedBook.id ? updatedBook : currentBook)
       )
-    } catch (err) {
-      setError(err.message)
+    } catch (error: any) {
+      setError(error.message)
       throw error
     }
   }

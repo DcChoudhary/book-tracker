@@ -1,11 +1,13 @@
 const API_URL =
   import.meta.env.VITE_API_URL ?? "http://localhost:3000/api/v1/books";
 
-async function request(url, option) {
+import type { BookParams } from '../../types/book'
+
+async function request(url:string, option = {}) {
   const response = await fetch(url, option)
 
   if (!response.ok) {
-    const message = response.text();
+    const message = await response.text();
     throw new Error(message || `Request failed: ${response.status}`)
   }
 
@@ -13,10 +15,10 @@ async function request(url, option) {
     return null
   }
 
-  return response.json();
+  return await response.json();
 }
 
-function jsonOption(method, book) {
+function jsonOption(method: string, book: BookParams | {}) {
   return {
     method,
     headers: { "Content-Type": "application/json" },
@@ -29,15 +31,15 @@ export const booksApi = {
     return request(API_URL);
   },
 
-  create(book) {
+  create(book: BookParams) {
     return request(API_URL, jsonOption('POST', book))
   },
 
-  update(id, newBook) {
+  update(id: bigint, newBook: { title: string }) {
     return request(`${API_URL}/${id}`, jsonOption("PUT", newBook))
   },
 
-  delete(id) {
+  delete(id: bigint) {
     return request(`${API_URL}/${id}`, { method: "DELETE" })
   }
 }

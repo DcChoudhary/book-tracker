@@ -8,12 +8,18 @@ import {
   TextField
 } from '@mui/material'
 
-export default function BookForm({ onCreate }) {
+import type { BookParams } from '../../types/book'
+
+interface BookFormProps {
+  onCreate: (book: BookParams) => void
+}
+
+export default function BookForm({ onCreate }: BookFormProps) {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [isSaving, setIsSaving] = useState(false)
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (title.trim() == '' || author.trim() == '') {
@@ -24,7 +30,7 @@ export default function BookForm({ onCreate }) {
       title,
       author,
       status: "want-to-read",
-      rating: null
+      rating: 0
     }
     setIsSaving(true)
     try {

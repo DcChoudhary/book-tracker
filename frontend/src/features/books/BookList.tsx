@@ -2,7 +2,17 @@ import { Alert, Box, Chip, LinearProgress, Paper, Stack, Typography, } from '@mu
 
 import BookCard from "./BookCard"
 
-export default function BookList({ books, loading, error, onEdit, onDelete }) {
+import type { Book, DeleteBookFn, EditBookFn } from "../../types/book"
+
+interface BookListProps {
+  books: Book[],
+  loading: boolean,
+  error: any, // We are using any here because e don't have define fix RFC response from the API, chang it once we have the RFC problem+json response from the API's
+  onEdit: EditBookFn,
+  onDelete:  DeleteBookFn,
+}
+
+export default function BookList({ books, loading, error, onEdit, onDelete }: BookListProps) {
   return (
     <Stack component="section" spacing={2}>
       <Stack
@@ -65,7 +75,7 @@ export default function BookList({ books, loading, error, onEdit, onDelete }) {
               gap: 2,
             }}
           >
-            {books.map((book) => (
+            {books.map((book: Book) => (
               <BookCard
                 key={book.id}
                 book={book}
